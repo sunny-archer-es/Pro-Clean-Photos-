@@ -248,7 +248,7 @@
 <body>
 <div id="app">
 
-  <div id="setup-banner">
+  <div id="setup-banner" style="display:none">
     <h2>⚙ ONE-TIME SETUP</h2>
     <ol>
       <li>Go to <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → create a project</li>
@@ -376,16 +376,16 @@ const LOGO_SRC = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAIBAQE
 
 document.querySelectorAll('#header-logo, #gate-logo, #drop-logo').forEach(el => el.src = LOGO_SRC);
 
-const STATE = { clientId: localStorage.getItem('sunnyarcher_client_id') || '', accessToken: null, files: [], renameIndex: 0, folderId: null, folderLink: null };
+const STATE = { clientId: '200245296438-jdg3eeg4cmis29fk58r01i1stjfp0bfp.apps.googleusercontent.com', accessToken: null, files: [], renameIndex: 0, folderId: null, folderLink: null };
 const $ = id => document.getElementById(id);
 const setupBanner=$('setup-banner'),clientIdInput=$('client-id-input'),saveClientBtn=$('save-client-id-btn'),signInBtn=$('sign-in-btn'),signInGateBtn=$('signin-gate-btn'),signinGate=$('signin-gate'),mainApp=$('main-app'),userPill=$('user-pill'),userName=$('user-name'),userInitial=$('user-initial'),dropZone=$('drop-zone'),fileInput=$('file-input'),photoGrid=$('photo-grid'),progressWrap=$('progress-wrap'),progressFill=$('progress-fill'),renameBox=$('rename-box'),renameCounter=$('rename-counter'),renamePreview=$('rename-preview'),renameFromName=$('rename-from-name'),renameInput=$('rename-input'),renameSkipBtn=$('rename-skip-btn'),renameNextBtn=$('rename-next-btn'),noteSection=$('note-section'),noteTextarea=$('note-textarea'),uploadBtn=$('upload-btn'),uploadProgress=$('upload-progress'),uploadItems=$('upload-items'),shareSection=$('share-section'),shareUrl=$('share-url'),copyBtn=$('copy-btn'),newFolderBtn=$('new-folder-btn'),statusEl=$('status');
 
-if (STATE.clientId) { clientIdInput.value = STATE.clientId; setupBanner.style.display = 'none'; }
+
 
 saveClientBtn.addEventListener('click', () => {
   const val = clientIdInput.value.trim();
   if (!val || !val.includes('.apps.googleusercontent.com')) { setStatus('That doesn\'t look like a valid Client ID.', 'error'); return; }
-  STATE.clientId = val; localStorage.setItem('sunnyarcher_client_id', val);
+  STATE.clientId = val; 
   setupBanner.style.display = 'none'; setStatus('Client ID saved!', 'success');
 });
 
@@ -408,7 +408,7 @@ async function fetchUserInfo() {
   } catch(e) { setStatus('Could not fetch user info.', 'error'); }
 }
 function doSignIn() {
-  if (!STATE.clientId) { setStatus('Please enter your Client ID first.', 'error'); setupBanner.style.display = 'block'; return; }
+  
   const tc = initTokenClient(); if (tc) tc.requestAccessToken();
 }
 signInBtn.addEventListener('click', doSignIn);
