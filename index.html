@@ -248,22 +248,6 @@
 <body>
 <div id="app">
 
-  <div id="setup-banner" style="display:none">
-    <h2>⚙ ONE-TIME SETUP</h2>
-    <ol>
-      <li>Go to <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → create a project</li>
-      <li>Enable <strong>Google Drive API</strong> under APIs &amp; Services</li>
-      <li>Create an <strong>OAuth 2.0 Client ID</strong> (Web application type)</li>
-      <li>Add <code>https://sunny-archer-es.github.io</code> to Authorised JavaScript origins</li>
-      <li>Add yourself as a <strong>Test user</strong> on the OAuth consent screen</li>
-      <li>Paste your Client ID below and click Save</li>
-    </ol>
-    <div class="client-id-row">
-      <input type="text" id="client-id-input" placeholder="Paste your Google OAuth Client ID here…" />
-      <button class="btn-gold" id="save-client-id-btn">Save &amp; Continue →</button>
-    </div>
-  </div>
-
   <header>
     <div class="logo-area">
       <img class="logo-img" id="header-logo" src="" alt="Sunny Archer Services logo">
@@ -378,16 +362,11 @@ document.querySelectorAll('#header-logo, #gate-logo, #drop-logo').forEach(el => 
 
 const STATE = { clientId: '200245296438-jdg3eeg4cmis29fk58r01i1stjfp0bfp.apps.googleusercontent.com', accessToken: null, files: [], renameIndex: 0, folderId: null, folderLink: null };
 const $ = id => document.getElementById(id);
-const setupBanner=$('setup-banner'),clientIdInput=$('client-id-input'),saveClientBtn=$('save-client-id-btn'),signInBtn=$('sign-in-btn'),signInGateBtn=$('signin-gate-btn'),signinGate=$('signin-gate'),mainApp=$('main-app'),userPill=$('user-pill'),userName=$('user-name'),userInitial=$('user-initial'),dropZone=$('drop-zone'),fileInput=$('file-input'),photoGrid=$('photo-grid'),progressWrap=$('progress-wrap'),progressFill=$('progress-fill'),renameBox=$('rename-box'),renameCounter=$('rename-counter'),renamePreview=$('rename-preview'),renameFromName=$('rename-from-name'),renameInput=$('rename-input'),renameSkipBtn=$('rename-skip-btn'),renameNextBtn=$('rename-next-btn'),noteSection=$('note-section'),noteTextarea=$('note-textarea'),uploadBtn=$('upload-btn'),uploadProgress=$('upload-progress'),uploadItems=$('upload-items'),shareSection=$('share-section'),shareUrl=$('share-url'),copyBtn=$('copy-btn'),newFolderBtn=$('new-folder-btn'),statusEl=$('status');
+const signInBtn=$('sign-in-btn'),signInGateBtn=$('signin-gate-btn'),signinGate=$('signin-gate'),mainApp=$('main-app'),userPill=$('user-pill'),userName=$('user-name'),userInitial=$('user-initial'),dropZone=$('drop-zone'),fileInput=$('file-input'),photoGrid=$('photo-grid'),progressWrap=$('progress-wrap'),progressFill=$('progress-fill'),renameBox=$('rename-box'),renameCounter=$('rename-counter'),renamePreview=$('rename-preview'),renameFromName=$('rename-from-name'),renameInput=$('rename-input'),renameSkipBtn=$('rename-skip-btn'),renameNextBtn=$('rename-next-btn'),noteSection=$('note-section'),noteTextarea=$('note-textarea'),uploadBtn=$('upload-btn'),uploadProgress=$('upload-progress'),uploadItems=$('upload-items'),shareSection=$('share-section'),shareUrl=$('share-url'),copyBtn=$('copy-btn'),newFolderBtn=$('new-folder-btn'),statusEl=$('status');
 
 
 
-saveClientBtn.addEventListener('click', () => {
-  const val = clientIdInput.value.trim();
-  if (!val || !val.includes('.apps.googleusercontent.com')) { setStatus('That doesn\'t look like a valid Client ID.', 'error'); return; }
-  STATE.clientId = val; 
-  setupBanner.style.display = 'none'; setStatus('Client ID saved!', 'success');
-});
+
 
 function initTokenClient() {
   if (!STATE.clientId) { setStatus('Please enter your Google Client ID first.', 'error'); return null; }
