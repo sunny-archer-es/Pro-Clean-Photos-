@@ -390,8 +390,10 @@ function onGsiLoaded() {
     // First time - try One Tap
     tryAutoSignIn();
   } else {
-    // Already known user - just refresh token quietly, no popup
-    tokenClient.requestAccessToken({ prompt: '' });
+    // Already known user - refresh token quietly after short delay
+    setTimeout(() => {
+      if (tokenClient) tokenClient.requestAccessToken({ prompt: '' });
+    }, 500);
   }
 }
 
@@ -421,16 +423,32 @@ async function handleOneTapCredential(response) {
 function handleToken(resp) {
   if (resp.error) {
     if (resp.error !== 'access_denied') {
-      setStatus('Sign-in failed: ' + resp.error, 'error');
+      // Token refresh failed silently - show sign in button again
+      signinGate.style.display = 'block';
+      mainApp.style.display = 'none';
+      localStorage.removeItem('sa_user_name');
+      localStorage.removeItem('sa_user_initial');
     }
     return;
   }
   STATE.accessToken = resp.access_token;
-  // Schedule token refresh 5 min before expiry (tokens last 1hr)
+  // Schedule token refresh before expiry
   setTimeout(() => {
     if (tokenClient) tokenClient.requestAccessToken({ prompt: '' });
   }, 55 * 60 * 1000);
-  fetchUserInfo();
+  // If we have cached user already showing, no need to fetch again
+  const cached = localStorage.getItem('sa_user_name');
+  if (cached) {
+    setStatus('');
+    // Process any pending files that were waiting for the token
+    if (STATE.pendingFiles) {
+      const pf = STATE.pendingFiles;
+      STATE.pendingFiles = null;
+      handleFiles(pf);
+    }
+  } else {
+    fetchUserInfo();
+  }
 }
 
 async function fetchUserInfo() {
@@ -488,7 +506,20 @@ dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.
 fileInput.addEventListener('change', () => handleFiles(fileInput.files));
 
 function handleFiles(fileList) {
-  if (!STATE.accessToken) { setStatus('Please sign in first.', 'error'); return; }
+  if (!STATE.accessToken) {
+    // Token not ready yet - request it silently then retry
+    setStatus('Refreshing sign-in…');
+    if (tokenClient) {
+      const pendingFiles = fileList;
+      const origCallback = tokenClient.callback;
+      tokenClient.requestAccessToken({ prompt: '' });
+      // After token arrives, handleToken fires, then we retry
+      STATE.pendingFiles = fileList;
+    } else {
+      setStatus('Please sign in first.', 'error');
+    }
+    return;
+  }
   const imgs = Array.from(fileList).filter(f => f.type.startsWith('image/'));
   if (!imgs.length) { setStatus('No image files found.', 'error'); return; }
   imgs.forEach(f => STATE.files.push({ file: f, name: f.name, objectUrl: URL.createObjectURL(f) }));
