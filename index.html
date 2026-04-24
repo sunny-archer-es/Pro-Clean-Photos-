@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Foldrop — Drop. Name. Share.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0e0e0f;
+    --surface: #18181a;
+    --surface2: #222225;
+    --border: rgba(255,255,255,0.08);
+    --border2: rgba(255,255,255,0.15);
+    --text: #f0ede8;
+    --muted: #7a7875;
+    --accent: #c8f06e;
+    --accent-dark: #8fb83e;
+    --accent-dim: rgba(200,240,110,0.1);
+    --danger: #ff6b6b;
+    --radius: 12px;
+    --radius-sm: 7px;
+  }
+
+  html, body { height: 100%; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Background grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #app { position: relative; z-index: 1; }
+
+  /* ── SETUP BANNER ── */
+  #setup-banner {
+    background: linear-gradient(135deg, #1a1a0e, #0e1a0a);
+    border-bottom: 1px solid var(--accent-dark);
+    padding: 2rem;
+    font-size: 13px;
+    line-height: 1.8;
+  }
+  #setup-banner h2 { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 300; color: var(--accent); margin-bottom: 1rem; }
+  #setup-banner ol { padding-left: 1.4rem; color: #b0b0a0; }
+  #setup-banner ol li { margin-bottom: 0.4rem; }
+  #setup-banner code { background: rgba(200,240,110,0.12); color: var(--accent); padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+  #setup-banner a { color: var(--accent); }
+  .client-id-row { display: flex; gap: 8px; margin-top: 1rem; }
+  .client-id-row input {
+    flex: 1; background: var(--surface); border: 1px solid var(--border2);
+    color: var(--text); border-radius: var(--radius-sm); padding: 9px 12px;
+    font-family: 'DM Mono', monospace; font-size: 12px; outline: none;
+  }
+  .client-id-row input:focus { border-color: var(--accent); }
+  .btn-accent {
+    background: var(--accent); color: #0a0a08; border: none;
+    padding: 9px 18px; border-radius: var(--radius-sm); font-family: 'DM Mono', monospace;
+    font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap;
+    transition: opacity 0.15s;
+  }
+  .btn-accent:hover { opacity: 0.85; }
+  .btn-accent:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  /* ── HEADER ── */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.25rem 2rem; border-bottom: 1px solid var(--border);
+  }
+  .logo { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .logo span { color: var(--accent); }
+  .user-pill {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 99px; padding: 5px 12px 5px 5px; font-size: 12px; color: var(--muted);
+  }
+  .user-avatar {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--accent-dim); border: 1px solid var(--accent-dark);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--accent); font-weight: 500;
+  }
+  #sign-in-btn {
+    background: var(--surface); border: 1px solid var(--border2);
+    color: var(--text); padding: 8px 16px; border-radius: 99px;
+    font-family: 'DM Mono', monospace; font-size: 12px; cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  #sign-in-btn:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .google-icon { width: 14px; height: 14px; }
+
+  /* ── MAIN ── */
+  main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1.5rem 4rem; }
+
+  /* Step indicator */
+  .steps { display: flex; gap: 0; margin-bottom: 2.5rem; position: relative; }
+  .steps::before {
+    content: ''; position: absolute; top: 13px; left: 13px; right: 13px;
+    height: 1px; background: var(--border);
+  }
+  .step-dot {
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    flex: 1; position: relative; z-index: 1;
+  }
+  .step-dot .dot {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--surface2); border: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; color: var(--muted); transition: all 0.3s;
+  }
+  .step-dot.active .dot { background: var(--accent); border-color: var(--accent); color: #0a0a08; font-weight: 500; }
+  .step-dot.done .dot { background: var(--accent-dim); border-color: var(--accent-dark); color: var(--accent); }
+  .step-dot .label { font-size: 10px; color: var(--muted); text-align: center; }
+  .step-dot.active .label { color: var(--accent); }
+
+  /* Cards */
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem;
+  }
+  .card-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; }
+
+  /* Drop zone */
+  #drop-zone {
+    border: 1.5px dashed var(--border2); border-radius: var(--radius);
+    padding: 3rem 2rem; text-align: center; cursor: pointer;
+    transition: all 0.2s; position: relative; margin-bottom: 1.25rem;
+  }
+  #drop-zone.dragover { border-color: var(--accent); background: var(--accent-dim); }
+  #drop-zone.locked { opacity: 0.4; pointer-events: none; }
+  .drop-icon { font-size: 32px; margin-bottom: 10px; display: block; }
+  .drop-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 300; margin-bottom: 6px; }
+  .drop-sub { font-size: 12px; color: var(--muted); }
+  #file-input { display: none; }
+
+  /* Photo grid */
+  #photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .photo-card {
+    border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border);
+    background: var(--surface2); transition: border-color 0.2s;
+  }
+  .photo-card.current { border-color: var(--accent); }
+  .photo-card.done-card { border-color: var(--accent-dark); opacity: 0.7; }
+  .photo-thumb {
+    width: 100%; aspect-ratio: 1; object-fit: cover; display: block;
+    background: var(--surface2);
+  }
+  .photo-label {
+    padding: 4px 6px; font-size: 10px; color: var(--muted);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .photo-card.current .photo-label { color: var(--accent); }
+
+  /* Rename box */
+  #rename-box { display: none; }
+  #rename-box.visible { display: block; }
+  .rename-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; }
+  #rename-preview {
+    width: 52px; height: 52px; object-fit: cover; border-radius: var(--radius-sm);
+    border: 1px solid var(--border2); background: var(--surface2);
+  }
+  .rename-meta { flex: 1; }
+  .rename-from { font-size: 11px; color: var(--muted); text-decoration: line-through; }
+  .rename-prompt { font-family: 'Fraunces', serif; font-size: 15px; font-weight: 300; color: var(--text); }
+  .rename-input-row { display: flex; gap: 8px; }
+  #rename-input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border2);
+    color: var(--text); border-radius: var(--radius-sm); padding: 10px 12px;
+    font-family: 'DM Mono', monospace; font-size: 13px; outline: none;
+    transition: border-color 0.15s;
+  }
+  #rename-input:focus { border-color: var(--accent); }
+  .btn-ghost {
+    background: transparent; border: 1px solid var(--border2); color: var(--muted);
+    padding: 10px 14px; border-radius: var(--radius-sm); font-family: 'DM Mono', monospace;
+    font-size: 12px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+  }
+  .btn-ghost:hover { border-color: var(--border2); color: var(--text); background: var(--surface2); }
+
+  /* Progress bar */
+  .progress-bar-wrap { height: 2px; background: var(--border); border-radius: 1px; margin-bottom: 1.25rem; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 1px; transition: width 0.4s ease; }
+
+  /* Note section */
+  #note-section { display: none; }
+  #note-section.visible { display: block; }
+  #note-textarea {
+    width: 100%; min-height: 110px; background: var(--surface2);
+    border: 1px solid var(--border); color: var(--text);
+    border-radius: var(--radius-sm); padding: 12px; font-family: 'DM Mono', monospace;
+    font-size: 13px; resize: vertical; outline: none; transition: border-color 0.15s;
+    line-height: 1.7;
+  }
+  #note-textarea:focus { border-color: var(--accent); }
+
+  /* Share section */
+  #share-section { display: none; }
+  #share-section.visible { display: block; }
+  .share-link-box {
+    background: var(--surface2); border: 1px solid var(--accent-dark);
+    border-radius: var(--radius-sm); padding: 10px 14px;
+    display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;
+  }
+  .share-link-url { font-size: 12px; color: var(--accent); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; word-break: break-all; }
+  .btn-copy {
+    background: transparent; border: 1px solid var(--accent-dark); color: var(--accent);
+    padding: 5px 12px; border-radius: var(--radius-sm); font-family: 'DM Mono', monospace;
+    font-size: 11px; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+  }
+  .btn-copy:hover { background: var(--accent-dim); }
+  .btn-copy.copied { background: var(--accent-dim); border-color: var(--accent); }
+
+  /* Upload button */
+  #upload-btn { width: 100%; padding: 13px; margin-bottom: 1rem; }
+
+  /* Status messages */
+  #status {
+    font-size: 12px; color: var(--muted); text-align: center;
+    padding: 8px; min-height: 28px;
+  }
+  #status.error { color: var(--danger); }
+  #status.success { color: var(--accent); }
+
+  /* Upload progress */
+  #upload-progress { display: none; margin-bottom: 1rem; }
+  #upload-progress.visible { display: block; }
+  .upload-item { display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--border); }
+  .upload-item:last-child { border-bottom: none; }
+  .upload-filename { flex: 1; font-size: 12px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .upload-status { font-size: 11px; }
+  .upload-status.uploading { color: var(--muted); }
+  .upload-status.done { color: var(--accent); }
+  .upload-status.err { color: var(--danger); }
+
+  /* New folder button */
+  #new-folder-btn { width: 100%; padding: 11px; margin-top: 0.5rem; }
+
+  /* Divider */
+  .divider { height: 1px; background: var(--border); margin: 1.5rem 0; }
+
+  /* Signed-out gate */
+  #signin-gate {
+    text-align: center; padding: 3rem 1rem;
+  }
+  #signin-gate h2 { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 300; margin-bottom: 8px; }
+  #signin-gate p { color: var(--muted); font-size: 13px; margin-bottom: 2rem; }
+  #signin-gate-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--surface); border: 1px solid var(--border2);
+    color: var(--text); padding: 12px 24px; border-radius: 99px;
+    font-family: 'DM Mono', monospace; font-size: 13px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  #signin-gate-btn:hover { border-color: var(--accent); background: var(--accent-dim); color: var(--accent); }
+
+  /* Spinner */
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner { display: inline-block; width: 12px; height: 12px; border: 1.5px solid var(--border2); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+  .fadein { animation: fadeIn 0.3s ease forwards; }
+</style>
+</head>
+<body>
+
+<!--
+╔══════════════════════════════════════════════════════════╗
+║              SETUP — READ BEFORE OPENING                 ║
+╠══════════════════════════════════════════════════════════╣
+║  You need a Google OAuth Client ID. Here's how (free):   ║
+║                                                          ║
+║  1. Go to https://console.cloud.google.com               ║
+║  2. Create a new project (or pick an existing one)       ║
+║  3. APIs & Services → Enable APIs                        ║
+║     → Enable "Google Drive API"                          ║
+║  4. APIs & Services → Credentials                        ║
+║     → Create Credentials → OAuth 2.0 Client ID          ║
+║     → Application type: Web application                  ║
+║     → Authorised JavaScript origins:                     ║
+║       Add: http://localhost (if running locally)         ║
+║       Add: https://yourdomain.com (if hosted)            ║
+║     → Copy the Client ID                                 ║
+║  5. APIs & Services → OAuth consent screen               ║
+║     → Add your Google account as a Test user             ║
+║  6. Paste the Client ID in the box at the top of the app ║
+╚══════════════════════════════════════════════════════════╝
+-->
+
+<div id="app">
+
+  <!-- Setup Banner -->
+  <div id="setup-banner">
+    <h2>⚙ One-time setup</h2>
+    <ol>
+      <li>Go to <a href="https://console.cloud.google.com" target="_blank">console.cloud.google.com</a> → create a project</li>
+      <li>Enable <strong>Google Drive API</strong> under APIs &amp; Services</li>
+      <li>Create an <strong>OAuth 2.0 Client ID</strong> (Web application type)</li>
+      <li>Add <code>http://localhost</code> or your hosted URL to Authorised JavaScript origins</li>
+      <li>Add yourself as a <strong>Test user</strong> on the OAuth consent screen</li>
+      <li>Paste your Client ID below and click Save</li>
+    </ol>
+    <div class="client-id-row">
+      <input type="text" id="client-id-input" placeholder="Paste your Google OAuth Client ID here…" />
+      <button class="btn-accent" id="save-client-id-btn">Save &amp; continue →</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="logo">fold<span>r</span>op</div>
+    <div id="auth-area">
+      <button id="sign-in-btn">
+        <svg class="google-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Sign in with Google
+      </button>
+      <div id="user-pill" class="user-pill" style="display:none">
+        <div class="user-avatar" id="user-initial">?</div>
+        <span id="user-name">User</span>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Signed-out state -->
+    <div id="signin-gate">
+      <h2>Drop. Name. Share.</h2>
+      <p>Upload photos to your Google Drive, rename them, add a note — then get a private share link.</p>
+      <button id="signin-gate-btn">
+        <svg class="google-icon" viewBox="0 0 24 24" fill="none">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+        Sign in with Google
+      </button>
+    </div>
+
+    <!-- Main app (shown after sign-in) -->
+    <div id="main-app" style="display:none">
+
+      <!-- Steps -->
+      <div class="steps">
+        <div class="step-dot active" id="step1">
+          <div class="dot">1</div>
+          <div class="label">Drop photos</div>
+        </div>
+        <div class="step-dot" id="step2">
+          <div class="dot">2</div>
+          <div class="label">Name them</div>
+        </div>
+        <div class="step-dot" id="step3">
+          <div class="dot">3</div>
+          <div class="label">Add note</div>
+        </div>
+        <div class="step-dot" id="step4">
+          <div class="dot">4</div>
+          <div class="label">Share link</div>
+        </div>
+      </div>
+
+      <!-- Drop zone -->
+      <div id="drop-zone">
+        <span class="drop-icon">📂</span>
+        <div class="drop-title">Drop your photos here</div>
+        <div class="drop-sub">or click to browse — JPG, PNG, WEBP, HEIC, GIF</div>
+        <input type="file" id="file-input" multiple accept="image/*">
+      </div>
+
+      <!-- Photo grid -->
+      <div id="photo-grid"></div>
+
+      <!-- Progress bar -->
+      <div class="progress-bar-wrap" id="progress-wrap" style="display:none">
+        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+
+      <!-- Rename box -->
+      <div class="card fadein" id="rename-box">
+        <div class="card-title" id="rename-counter">Rename photo 1 of 1</div>
+        <div class="rename-header">
+          <img id="rename-preview" src="" alt="preview">
+          <div class="rename-meta">
+            <div class="rename-from" id="rename-from-name">original.jpg</div>
+            <div class="rename-prompt">What should this photo be called?</div>
+          </div>
+        </div>
+        <div class="rename-input-row">
+          <input type="text" id="rename-input" placeholder="e.g. beach-sunset.jpg" />
+          <button class="btn-ghost" id="rename-skip-btn">Skip</button>
+          <button class="btn-accent" id="rename-next-btn">Next →</button>
+        </div>
+      </div>
+
+      <!-- Note section -->
+      <div class="card fadein" id="note-section">
+        <div class="card-title">Add a text note (optional)</div>
+        <textarea id="note-textarea" placeholder="Write a caption, story, instructions, or description for the recipient…"></textarea>
+      </div>
+
+      <!-- Upload button -->
+      <button class="btn-accent" id="upload-btn" style="display:none">
+        Upload to Google Drive &amp; get link →
+      </button>
+
+      <!-- Upload progress list -->
+      <div class="card" id="upload-progress">
+        <div class="card-title">Uploading…</div>
+        <div id="upload-items"></div>
+      </div>
+
+      <!-- Share section -->
+      <div class="card fadein" id="share-section">
+        <div class="card-title">✓ Folder created — share this link</div>
+        <div class="share-link-box">
+          <div class="share-link-url" id="share-url">—</div>
+          <button class="btn-copy" id="copy-btn">Copy</button>
+        </div>
+        <div style="font-size:12px; color: var(--muted); margin-bottom: 1rem;">
+          Anyone with this link can view the folder in Google Drive. The link is unguessable but not password-protected.
+        </div>
+        <button class="btn-ghost" id="new-folder-btn">+ Start a new folder</button>
+      </div>
+
+      <div id="status"></div>
+
+    </div><!-- /main-app -->
+  </main>
+</div>
+
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+const STATE = {
+  clientId: localStorage.getItem('foldrop_client_id') || '',
+  accessToken: null,
+  files: [],          // { file, name, objectUrl }
+  renameIndex: 0,
+  folderId: null,
+  folderLink: null,
+};
+
+// ── DOM REFS ───────────────────────────────────────────────────────────────
+const $ = id => document.getElementById(id);
+const setupBanner    = $('setup-banner');
+const clientIdInput  = $('client-id-input');
+const saveClientBtn  = $('save-client-id-btn');
+const signInBtn      = $('sign-in-btn');
+const signInGateBtn  = $('signin-gate-btn');
+const signinGate     = $('signin-gate');
+const mainApp        = $('main-app');
+const userPill       = $('user-pill');
+const userName       = $('user-name');
+const userInitial    = $('user-initial');
+const dropZone       = $('drop-zone');
+const fileInput      = $('file-input');
+const photoGrid      = $('photo-grid');
+const progressWrap   = $('progress-wrap');
+const progressFill   = $('progress-fill');
+const renameBox      = $('rename-box');
+const renameCounter  = $('rename-counter');
+const renamePreview  = $('rename-preview');
+const renameFromName = $('rename-from-name');
+const renameInput    = $('rename-input');
+const renameSkipBtn  = $('rename-skip-btn');
+const renameNextBtn  = $('rename-next-btn');
+const noteSection    = $('note-section');
+const noteTextarea   = $('note-textarea');
+const uploadBtn      = $('upload-btn');
+const uploadProgress = $('upload-progress');
+const uploadItems    = $('upload-items');
+const shareSection   = $('share-section');
+const shareUrl       = $('share-url');
+const copyBtn        = $('copy-btn');
+const newFolderBtn   = $('new-folder-btn');
+const statusEl       = $('status');
+
+// ── CLIENT ID SETUP ────────────────────────────────────────────────────────
+if (STATE.clientId) {
+  clientIdInput.value = STATE.clientId;
+  setupBanner.style.display = 'none';
+}
+
+saveClientBtn.addEventListener('click', () => {
+  const val = clientIdInput.value.trim();
+  if (!val || !val.includes('.apps.googleusercontent.com')) {
+    setStatus('That doesn\'t look like a valid Client ID. It should end in .apps.googleusercontent.com', 'error');
+    return;
+  }
+  STATE.clientId = val;
+  localStorage.setItem('foldrop_client_id', val);
+  setupBanner.style.display = 'none';
+  setStatus('Client ID saved!', 'success');
+});
+
+// ── AUTH ───────────────────────────────────────────────────────────────────
+function initTokenClient() {
+  if (!STATE.clientId) {
+    setStatus('Please enter your Google Client ID first.', 'error');
+    return null;
+  }
+  return google.accounts.oauth2.initTokenClient({
+    client_id: STATE.clientId,
+    scope: 'https://www.googleapis.com/auth/drive.file',
+    callback: handleToken,
+  });
+}
+
+function handleToken(resp) {
+  if (resp.error) { setStatus('Sign-in failed: ' + resp.error, 'error'); return; }
+  STATE.accessToken = resp.access_token;
+  fetchUserInfo();
+}
+
+async function fetchUserInfo() {
+  try {
+    const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: 'Bearer ' + STATE.accessToken }
+    });
+    const u = await r.json();
+    const name = u.name || u.email || 'Signed in';
+    userName.textContent = name;
+    userInitial.textContent = name[0].toUpperCase();
+    userPill.style.display = 'flex';
+    signInBtn.style.display = 'none';
+    signinGate.style.display = 'none';
+    mainApp.style.display = 'block';
+    setStatus('');
+  } catch(e) {
+    setStatus('Could not fetch user info.', 'error');
+  }
+}
+
+function doSignIn() {
+  if (!STATE.clientId) {
+    setStatus('Please enter your Google Client ID first (see setup banner above).', 'error');
+    setupBanner.style.display = 'block';
+    return;
+  }
+  const tc = initTokenClient();
+  if (tc) tc.requestAccessToken();
+}
+
+signInBtn.addEventListener('click', doSignIn);
+signInGateBtn.addEventListener('click', doSignIn);
+
+// ── DROP ZONE ──────────────────────────────────────────────────────────────
+dropZone.addEventListener('click', () => fileInput.click());
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  handleFiles(e.dataTransfer.files);
+});
+fileInput.addEventListener('change', () => handleFiles(fileInput.files));
+
+function handleFiles(fileList) {
+  if (!STATE.accessToken) { setStatus('Please sign in first.', 'error'); return; }
+  const imgs = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+  if (!imgs.length) { setStatus('No image files found.', 'error'); return; }
+
+  imgs.forEach(f => {
+    STATE.files.push({ file: f, name: f.name, objectUrl: URL.createObjectURL(f) });
+  });
+
+  renderGrid();
+  startRenameFlow();
+  setStatus('');
+}
+
+// ── GRID ───────────────────────────────────────────────────────────────────
+function renderGrid() {
+  photoGrid.innerHTML = '';
+  STATE.files.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'photo-card' +
+      (i === STATE.renameIndex ? ' current' : '') +
+      (i < STATE.renameIndex ? ' done-card' : '');
+    div.innerHTML = `
+      <img class="photo-thumb" src="${item.objectUrl}" alt="${item.name}">
+      <div class="photo-label">${item.name}</div>`;
+    photoGrid.appendChild(div);
+  });
+  progressWrap.style.display = STATE.files.length ? 'block' : 'none';
+  const pct = STATE.files.length ? Math.round((STATE.renameIndex / STATE.files.length) * 100) : 0;
+  progressFill.style.width = pct + '%';
+}
+
+// ── RENAME FLOW ────────────────────────────────────────────────────────────
+function startRenameFlow() {
+  STATE.renameIndex = 0;
+  showRenameStep();
+  setStep(2);
+}
+
+function showRenameStep() {
+  const item = STATE.files[STATE.renameIndex];
+  if (!item) { finishRename(); return; }
+
+  renameBox.classList.add('visible');
+  renameCounter.textContent = `Rename photo ${STATE.renameIndex + 1} of ${STATE.files.length}`;
+  renamePreview.src = item.objectUrl;
+  renameFromName.textContent = item.file.name;
+  renameInput.value = '';
+  renameInput.placeholder = stripExt(item.file.name);
+  renameInput.focus();
+  renderGrid();
+}
+
+function applyRename() {
+  const raw = renameInput.value.trim() || STATE.files[STATE.renameIndex].file.name;
+  // Ensure it has an extension
+  const ext = getExt(STATE.files[STATE.renameIndex].file.name);
+  const hasExt = raw.includes('.');
+  STATE.files[STATE.renameIndex].name = hasExt ? raw : raw + '.' + ext;
+  STATE.renameIndex++;
+  showRenameStep();
+}
+
+renameNextBtn.addEventListener('click', applyRename);
+renameSkipBtn.addEventListener('click', () => { STATE.renameIndex++; showRenameStep(); });
+renameInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyRename(); });
+
+function finishRename() {
+  renameBox.classList.remove('visible');
+  noteSection.classList.add('visible');
+  uploadBtn.style.display = 'block';
+  setStep(3);
+  renderGrid();
+  progressFill.style.width = '100%';
+}
+
+// ── UPLOAD ─────────────────────────────────────────────────────────────────
+uploadBtn.addEventListener('click', startUpload);
+
+async function startUpload() {
+  if (!STATE.accessToken) { setStatus('Please sign in first.', 'error'); return; }
+  if (!STATE.files.length) { setStatus('No photos to upload.', 'error'); return; }
+
+  uploadBtn.disabled = true;
+  uploadBtn.textContent = 'Uploading… ';
+  uploadProgress.classList.add('visible');
+  uploadItems.innerHTML = '';
+  setStep(4);
+  setStatus('');
+
+  try {
+    // 1. Create folder
+    setStatus('Creating folder in Google Drive…');
+    const folderName = 'Foldrop — ' + new Date().toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
+    const folderMeta = { name: folderName, mimeType: 'application/vnd.google-apps.folder' };
+    const folderRes = await gdrivePost(
+      'https://www.googleapis.com/drive/v3/files',
+      folderMeta
+    );
+    STATE.folderId = folderRes.id;
+
+    // 2. Upload each photo
+    for (let i = 0; i < STATE.files.length; i++) {
+      const item = STATE.files[i];
+      const rowId = 'up-' + i;
+      uploadItems.innerHTML += `<div class="upload-item" id="${rowId}">
+        <span class="upload-filename">${item.name}</span>
+        <span class="upload-status uploading" id="${rowId}-s"><span class="spinner"></span></span>
+      </div>`;
+
+      try {
+        await uploadFile(item, STATE.folderId);
+        document.getElementById(rowId + '-s').className = 'upload-status done';
+        document.getElementById(rowId + '-s').textContent = '✓';
+      } catch(e) {
+        document.getElementById(rowId + '-s').className = 'upload-status err';
+        document.getElementById(rowId + '-s').textContent = '✗';
+      }
+    }
+
+    // 3. Upload note if any
+    const noteText = noteTextarea.value.trim();
+    if (noteText) {
+      uploadItems.innerHTML += `<div class="upload-item" id="up-note">
+        <span class="upload-filename">note.txt</span>
+        <span class="upload-status uploading" id="up-note-s"><span class="spinner"></span></span>
+      </div>`;
+      try {
+        await uploadTextFile('note.txt', noteText, STATE.folderId);
+        $('up-note-s').className = 'upload-status done';
+        $('up-note-s').textContent = '✓';
+      } catch(e) {
+        $('up-note-s').className = 'upload-status err';
+        $('up-note-s').textContent = '✗';
+      }
+    }
+
+    // 4. Share folder (anyone with link, reader)
+    setStatus('Setting share permissions…');
+    await gdrivePost(
+      `https://www.googleapis.com/drive/v3/files/${STATE.folderId}/permissions`,
+      { role: 'reader', type: 'anyone' }
+    );
+
+    // 5. Get shareable link
+    const meta = await gdriveFetch(`https://www.googleapis.com/drive/v3/files/${STATE.folderId}?fields=webViewLink`);
+    STATE.folderLink = meta.webViewLink;
+
+    shareUrl.textContent = STATE.folderLink;
+    shareSection.classList.add('visible');
+    uploadBtn.style.display = 'none';
+    setStatus('Done! Your folder is ready.', 'success');
+
+  } catch(e) {
+    setStatus('Upload failed: ' + (e.message || 'unknown error'), 'error');
+    uploadBtn.disabled = false;
+    uploadBtn.textContent = 'Retry upload →';
+  }
+}
+
+// ── COPY LINK ──────────────────────────────────────────────────────────────
+copyBtn.addEventListener('click', () => {
+  navigator.clipboard.writeText(STATE.folderLink).then(() => {
+    copyBtn.textContent = 'Copied!';
+    copyBtn.classList.add('copied');
+    setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 2000);
+  });
+});
+
+// ── NEW FOLDER ─────────────────────────────────────────────────────────────
+newFolderBtn.addEventListener('click', () => {
+  STATE.files = [];
+  STATE.renameIndex = 0;
+  STATE.folderId = null;
+  STATE.folderLink = null;
+  photoGrid.innerHTML = '';
+  progressWrap.style.display = 'none';
+  progressFill.style.width = '0%';
+  noteTextarea.value = '';
+  renameBox.classList.remove('visible');
+  noteSection.classList.remove('visible');
+  shareSection.classList.remove('visible');
+  uploadProgress.classList.remove('visible');
+  uploadItems.innerHTML = '';
+  uploadBtn.disabled = false;
+  uploadBtn.textContent = 'Upload to Google Drive & get link →';
+  uploadBtn.style.display = 'none';
+  dropZone.classList.remove('locked');
+  fileInput.value = '';
+  setStep(1);
+  setStatus('');
+});
+
+// ── GOOGLE DRIVE HELPERS ───────────────────────────────────────────────────
+async function gdrivePost(url, body) {
+  const r = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': 'Bearer ' + STATE.accessToken,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(body),
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function gdriveFetch(url) {
+  const r = await fetch(url, { headers: { 'Authorization': 'Bearer ' + STATE.accessToken } });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function uploadFile(item, folderId) {
+  const meta = { name: item.name, parents: [folderId] };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
+  form.append('file', item.file);
+
+  const r = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + STATE.accessToken },
+    body: form,
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+async function uploadTextFile(name, text, folderId) {
+  const meta = { name, parents: [folderId], mimeType: 'text/plain' };
+  const form = new FormData();
+  form.append('metadata', new Blob([JSON.stringify(meta)], { type: 'application/json' }));
+  form.append('file', new Blob([text], { type: 'text/plain' }));
+
+  const r = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + STATE.accessToken },
+    body: form,
+  });
+  if (!r.ok) throw new Error(await r.text());
+  return r.json();
+}
+
+// ── UI HELPERS ─────────────────────────────────────────────────────────────
+function setStatus(msg, type = '') {
+  statusEl.textContent = msg;
+  statusEl.className = type;
+}
+
+function setStep(n) {
+  [1,2,3,4].forEach(i => {
+    const el = $('step' + i);
+    el.classList.remove('active', 'done');
+    if (i < n) el.classList.add('done');
+    else if (i === n) el.classList.add('active');
+  });
+}
+
+function stripExt(name) { return name.replace(/\.[^.]+$/, ''); }
+function getExt(name) { const m = name.match(/\.([^.]+)$/); return m ? m[1] : 'jpg'; }
+
+</script>
+</body>
+</html>
