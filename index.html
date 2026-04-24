@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -50,219 +51,220 @@
   }
   #app { position: relative; z-index: 1; }
 
-  /* SETUP BANNER */
-  #setup-banner {
-    background: linear-gradient(135deg, #1a1608, #0f0e0a);
-    border-bottom: 1px solid var(--gold);
-    padding: 1.75rem 2rem;
-  }
-  #setup-banner h2 { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 600; color: var(--gold-light); margin-bottom: 0.75rem; letter-spacing: 0.05em; }
-  #setup-banner ol { padding-left: 1.4rem; color: var(--muted); font-size: 13px; line-height: 2; }
-  #setup-banner a { color: var(--gold); }
-  #setup-banner code { background: var(--gold-dim); color: var(--gold-light); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
-  .client-id-row { display: flex; gap: 8px; margin-top: 1rem; }
-  .client-id-row input {
-    flex: 1; background: var(--surface2); border: 1px solid var(--border2);
-    color: var(--text); border-radius: var(--radius-sm); padding: 9px 12px;
-    font-family: monospace; font-size: 12px; outline: none;
-  }
-  .client-id-row input:focus { border-color: var(--gold); }
+/* SETUP BANNER */
+#setup-banner {
+background: linear-gradient(135deg, #1a1608, #0f0e0a);
+border-bottom: 1px solid var(–gold);
+padding: 1.75rem 2rem;
+}
+#setup-banner h2 { font-family: ‘Cinzel’, serif; font-size: 16px; font-weight: 600; color: var(–gold-light); margin-bottom: 0.75rem; letter-spacing: 0.05em; }
+#setup-banner ol { padding-left: 1.4rem; color: var(–muted); font-size: 13px; line-height: 2; }
+#setup-banner a { color: var(–gold); }
+#setup-banner code { background: var(–gold-dim); color: var(–gold-light); padding: 1px 6px; border-radius: 3px; font-size: 12px; }
+.client-id-row { display: flex; gap: 8px; margin-top: 1rem; }
+.client-id-row input {
+flex: 1; background: var(–surface2); border: 1px solid var(–border2);
+color: var(–text); border-radius: var(–radius-sm); padding: 9px 12px;
+font-family: monospace; font-size: 12px; outline: none;
+}
+.client-id-row input:focus { border-color: var(–gold); }
 
-  .btn-gold {
-    background: linear-gradient(135deg, var(--gold), var(--bronze));
-    color: #0f0e0a; border: none; padding: 10px 20px;
-    border-radius: var(--radius-sm); font-family: 'Cinzel', serif;
-    font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
-    letter-spacing: 0.04em; transition: opacity 0.15s;
-  }
-  .btn-gold:hover { opacity: 0.88; }
-  .btn-gold:disabled { opacity: 0.35; cursor: not-allowed; }
+.btn-gold {
+background: linear-gradient(135deg, var(–gold), var(–bronze));
+color: #0f0e0a; border: none; padding: 10px 20px;
+border-radius: var(–radius-sm); font-family: ‘Cinzel’, serif;
+font-size: 12px; font-weight: 600; cursor: pointer; white-space: nowrap;
+letter-spacing: 0.04em; transition: opacity 0.15s;
+}
+.btn-gold:hover { opacity: 0.88; }
+.btn-gold:disabled { opacity: 0.35; cursor: not-allowed; }
 
-  /* HEADER */
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1rem 2rem; border-bottom: 1px solid var(--border);
-    background: rgba(15,14,10,0.95);
-  }
-  .logo-area { display: flex; align-items: center; gap: 12px; }
-  .logo-img { width: 44px; height: 44px; object-fit: contain; }
-  .logo-text { display: flex; flex-direction: column; line-height: 1.1; }
-  .logo-main { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold-light); letter-spacing: 0.06em; }
-  .logo-sub { font-family: 'Crimson Pro', serif; font-size: 12px; color: var(--muted); letter-spacing: 0.12em; text-transform: uppercase; }
+/* HEADER */
+header {
+display: flex; align-items: center; justify-content: space-between;
+padding: 1rem 2rem; border-bottom: 1px solid var(–border);
+background: rgba(15,14,10,0.95);
+}
+.logo-area { display: flex; align-items: center; gap: 12px; }
+.logo-img { width: 44px; height: 44px; object-fit: contain; }
+.logo-text { display: flex; flex-direction: column; line-height: 1.1; }
+.logo-main { font-family: ‘Cinzel’, serif; font-size: 20px; font-weight: 700; color: var(–gold-light); letter-spacing: 0.06em; }
+.logo-sub { font-family: ‘Crimson Pro’, serif; font-size: 12px; color: var(–muted); letter-spacing: 0.12em; text-transform: uppercase; }
 
-  .user-pill {
-    display: flex; align-items: center; gap: 8px;
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: 99px; padding: 5px 14px 5px 5px; font-size: 12px; color: var(--muted);
-    font-family: 'Crimson Pro', serif;
-  }
-  .user-avatar {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--gold-dim2); border: 1px solid var(--gold);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 12px; color: var(--gold-light); font-family: 'Cinzel', serif; font-weight: 600;
-  }
-  #sign-in-btn {
-    background: var(--surface); border: 1px solid var(--border2);
-    color: var(--text); padding: 8px 18px; border-radius: 99px;
-    font-family: 'Crimson Pro', serif; font-size: 13px; cursor: pointer;
-    transition: all 0.2s; display: flex; align-items: center; gap: 7px;
-  }
-  #sign-in-btn:hover { border-color: var(--gold); background: var(--gold-dim); color: var(--gold-light); }
-  .google-icon { width: 14px; height: 14px; flex-shrink: 0; }
+.user-pill {
+display: flex; align-items: center; gap: 8px;
+background: var(–surface); border: 1px solid var(–border);
+border-radius: 99px; padding: 5px 14px 5px 5px; font-size: 12px; color: var(–muted);
+font-family: ‘Crimson Pro’, serif;
+}
+.user-avatar {
+width: 26px; height: 26px; border-radius: 50%;
+background: var(–gold-dim2); border: 1px solid var(–gold);
+display: flex; align-items: center; justify-content: center;
+font-size: 12px; color: var(–gold-light); font-family: ‘Cinzel’, serif; font-weight: 600;
+}
+#sign-in-btn {
+background: var(–surface); border: 1px solid var(–border2);
+color: var(–text); padding: 8px 18px; border-radius: 99px;
+font-family: ‘Crimson Pro’, serif; font-size: 13px; cursor: pointer;
+transition: all 0.2s; display: flex; align-items: center; gap: 7px;
+}
+#sign-in-btn:hover { border-color: var(–gold); background: var(–gold-dim); color: var(–gold-light); }
+.google-icon { width: 14px; height: 14px; flex-shrink: 0; }
 
-  /* MAIN */
-  main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
-  @media (max-width: 480px) {
-    main { padding: 1.5rem 0.75rem 4rem; }
-    .card { padding: 1.1rem; }
-    header { padding: 0.9rem 1rem; }
-    .logo-main { font-size: 17px; }
-    .logo-sub { font-size: 10px; }
-    .logo-img { width: 36px; height: 36px; }
-    #drop-zone { padding: 2rem 1rem; }
-    .drop-title { font-size: 17px; }
-  }
+/* MAIN */
+main { max-width: 680px; margin: 0 auto; padding: 2.5rem 1rem 4rem; }
+@media (max-width: 480px) {
+main { padding: 1.5rem 0.75rem 4rem; }
+.card { padding: 1.1rem; }
+header { padding: 0.9rem 1rem; }
+.logo-main { font-size: 17px; }
+.logo-sub { font-size: 10px; }
+.logo-img { width: 36px; height: 36px; }
+#drop-zone { padding: 2rem 1rem; }
+.drop-title { font-size: 17px; }
+}
 
-  /* STEPS */
-  .steps { display: flex; margin-bottom: 2.5rem; position: relative; }
-  .steps::before { content: ''; position: absolute; top: 13px; left: 13px; right: 13px; height: 1px; background: var(--border); }
-  .step-dot { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; position: relative; z-index: 1; }
-  .step-dot .dot {
-    width: 26px; height: 26px; border-radius: 50%;
-    background: var(--surface2); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 11px; color: var(--muted); font-family: 'Cinzel', serif; transition: all 0.3s;
-  }
-  .step-dot.active .dot { background: var(--gold); border-color: var(--gold-light); color: #0f0e0a; font-weight: 700; }
-  .step-dot.done .dot { background: var(--gold-dim2); border-color: var(--gold); color: var(--gold-light); }
-  .step-dot .label { font-size: 10px; color: var(--muted); text-align: center; font-family: 'Cinzel', serif; letter-spacing: 0.04em; }
-  .step-dot.active .label { color: var(--gold-light); }
+/* STEPS */
+.steps { display: flex; margin-bottom: 2.5rem; position: relative; }
+.steps::before { content: ‘’; position: absolute; top: 13px; left: 13px; right: 13px; height: 1px; background: var(–border); }
+.step-dot { display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 1; position: relative; z-index: 1; }
+.step-dot .dot {
+width: 26px; height: 26px; border-radius: 50%;
+background: var(–surface2); border: 1px solid var(–border);
+display: flex; align-items: center; justify-content: center;
+font-size: 11px; color: var(–muted); font-family: ‘Cinzel’, serif; transition: all 0.3s;
+}
+.step-dot.active .dot { background: var(–gold); border-color: var(–gold-light); color: #0f0e0a; font-weight: 700; }
+.step-dot.done .dot { background: var(–gold-dim2); border-color: var(–gold); color: var(–gold-light); }
+.step-dot .label { font-size: 10px; color: var(–muted); text-align: center; font-family: ‘Cinzel’, serif; letter-spacing: 0.04em; }
+.step-dot.active .label { color: var(–gold-light); }
 
-  /* CARDS */
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; margin-bottom: 1.25rem; }
-  .card-title { font-family: 'Cinzel', serif; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
+/* CARDS */
+.card { background: var(–surface); border: 1px solid var(–border); border-radius: var(–radius); padding: 1.5rem; margin-bottom: 1.25rem; }
+.card-title { font-family: ‘Cinzel’, serif; font-size: 10px; color: var(–muted); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 1rem; }
 
-  /* DROP ZONE */
-  #drop-zone {
-    border: 1.5px dashed var(--border2); border-radius: var(--radius);
-    padding: 3rem 2rem; text-align: center; cursor: pointer;
-    transition: all 0.2s; margin-bottom: 1.25rem; position: relative;
-  }
-  #drop-zone:hover, #drop-zone.dragover { border-color: var(--gold); background: var(--gold-dim); }
-  #drop-zone.locked { opacity: 0.4; pointer-events: none; }
-  .drop-icon-wrap { margin-bottom: 12px; }
-  .drop-icon-wrap img { width: 56px; height: 56px; object-fit: contain; opacity: 0.7; }
-  .drop-title { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 600; color: var(--gold-light); margin-bottom: 6px; letter-spacing: 0.03em; }
-  .drop-sub { font-size: 13px; color: var(--muted); }
-  #file-input { display: none; }
+/* DROP ZONE */
+#drop-zone {
+border: 1.5px dashed var(–border2); border-radius: var(–radius);
+padding: 3rem 2rem; text-align: center; cursor: pointer;
+transition: all 0.2s; margin-bottom: 1.25rem; position: relative;
+}
+#drop-zone:hover, #drop-zone.dragover { border-color: var(–gold); background: var(–gold-dim); }
+#drop-zone.locked { opacity: 0.4; pointer-events: none; }
+.drop-icon-wrap { margin-bottom: 12px; }
+.drop-icon-wrap img { width: 56px; height: 56px; object-fit: contain; opacity: 0.7; }
+.drop-title { font-family: ‘Cinzel’, serif; font-size: 20px; font-weight: 600; color: var(–gold-light); margin-bottom: 6px; letter-spacing: 0.03em; }
+.drop-sub { font-size: 13px; color: var(–muted); }
+#file-input { display: none; }
 
-  /* GRID */
-  #photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
-  .photo-card { border-radius: var(--radius-sm); overflow: hidden; border: 1px solid var(--border); background: var(--surface2); transition: border-color 0.2s; }
-  .photo-card.current { border-color: var(--gold); box-shadow: 0 0 0 2px var(--gold-dim2); }
-  .photo-card.done-card { border-color: var(--bronze); opacity: 0.65; }
-  .photo-thumb { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(--surface2); }
-  .photo-label { padding: 4px 6px; font-size: 10px; color: var(--muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
-  .photo-card.current .photo-label { color: var(--gold-light); }
+/* GRID */
+#photo-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+.photo-card { border-radius: var(–radius-sm); overflow: hidden; border: 1px solid var(–border); background: var(–surface2); transition: border-color 0.2s; }
+.photo-card.current { border-color: var(–gold); box-shadow: 0 0 0 2px var(–gold-dim2); }
+.photo-card.done-card { border-color: var(–bronze); opacity: 0.65; }
+.photo-thumb { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; background: var(–surface2); }
+.photo-label { padding: 4px 6px; font-size: 10px; color: var(–muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
+.photo-card.current .photo-label { color: var(–gold-light); }
 
-  /* PROGRESS */
-  .progress-bar-wrap { height: 2px; background: var(--border); border-radius: 1px; margin-bottom: 1.25rem; overflow: hidden; }
-  .progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--bronze), var(--gold-light)); border-radius: 1px; transition: width 0.4s ease; }
+/* PROGRESS */
+.progress-bar-wrap { height: 2px; background: var(–border); border-radius: 1px; margin-bottom: 1.25rem; overflow: hidden; }
+.progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(–bronze), var(–gold-light)); border-radius: 1px; transition: width 0.4s ease; }
 
-  /* RENAME */
-  #rename-box { display: none; }
-  #rename-box.visible { display: block; }
-  .rename-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
-  #rename-preview { width: 54px; height: 54px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--border2); background: var(--surface2); }
-  .rename-meta { flex: 1; }
-  .rename-from { font-size: 11px; color: var(--muted); text-decoration: line-through; font-family: monospace; }
-  .rename-prompt { font-family: 'Cinzel', serif; font-size: 14px; color: var(--cream); margin-top: 3px; }
-  .rename-input-row { display: flex; flex-direction: column; gap: 8px; }
-  .rename-btn-row { display: flex; gap: 8px; }
-  .rename-btn-row .btn-ghost { flex: 1; text-align: center; }
-  .rename-btn-row .btn-gold { flex: 2; text-align: center; }
-  #rename-input {
-    flex: 1; background: var(--surface2); border: 1px solid var(--border2);
-    color: var(--text); border-radius: var(--radius-sm); padding: 10px 12px;
-    font-family: monospace; font-size: 13px; outline: none; transition: border-color 0.15s;
-  }
-  #rename-input:focus { border-color: var(--gold); }
-  .btn-ghost {
-    background: transparent; border: 1px solid var(--border2); color: var(--muted);
-    padding: 10px 14px; border-radius: var(--radius-sm); font-family: 'Crimson Pro', serif;
-    font-size: 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
-  }
-  .btn-ghost:hover { color: var(--text); border-color: var(--gold); }
+/* RENAME */
+#rename-box { display: none; }
+#rename-box.visible { display: block; }
+.rename-header { display: flex; align-items: center; gap: 12px; margin-bottom: 1rem; }
+#rename-preview { width: 54px; height: 54px; object-fit: cover; border-radius: var(–radius-sm); border: 1px solid var(–border2); background: var(–surface2); }
+.rename-meta { flex: 1; }
+.rename-from { font-size: 11px; color: var(–muted); text-decoration: line-through; font-family: monospace; }
+.rename-prompt { font-family: ‘Cinzel’, serif; font-size: 14px; color: var(–cream); margin-top: 3px; }
+.rename-input-row { display: flex; flex-direction: column; gap: 8px; }
+.rename-btn-row { display: flex; gap: 8px; }
+.rename-btn-row .btn-ghost { flex: 1; text-align: center; }
+.rename-btn-row .btn-gold { flex: 2; text-align: center; }
+#rename-input {
+flex: 1; background: var(–surface2); border: 1px solid var(–border2);
+color: var(–text); border-radius: var(–radius-sm); padding: 10px 12px;
+font-family: monospace; font-size: 13px; outline: none; transition: border-color 0.15s;
+}
+#rename-input:focus { border-color: var(–gold); }
+.btn-ghost {
+background: transparent; border: 1px solid var(–border2); color: var(–muted);
+padding: 10px 14px; border-radius: var(–radius-sm); font-family: ‘Crimson Pro’, serif;
+font-size: 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap;
+}
+.btn-ghost:hover { color: var(–text); border-color: var(–gold); }
 
-  /* NOTE */
-  #note-section { display: none; }
-  #note-section.visible { display: block; }
-  #note-textarea {
-    width: 100%; min-height: 110px; background: var(--surface2);
-    border: 1px solid var(--border); color: var(--text);
-    border-radius: var(--radius-sm); padding: 12px; font-family: 'Crimson Pro', serif;
-    font-size: 14px; resize: vertical; outline: none; transition: border-color 0.15s; line-height: 1.7;
-  }
-  #note-textarea:focus { border-color: var(--gold); }
+/* NOTE */
+#note-section { display: none; }
+#note-section.visible { display: block; }
+#note-textarea {
+width: 100%; min-height: 110px; background: var(–surface2);
+border: 1px solid var(–border); color: var(–text);
+border-radius: var(–radius-sm); padding: 12px; font-family: ‘Crimson Pro’, serif;
+font-size: 14px; resize: vertical; outline: none; transition: border-color 0.15s; line-height: 1.7;
+}
+#note-textarea:focus { border-color: var(–gold); }
 
-  /* UPLOAD BTN */
-  #upload-btn { width: 100%; padding: 13px; margin-bottom: 1rem; font-size: 13px; letter-spacing: 0.06em; }
+/* UPLOAD BTN */
+#upload-btn { width: 100%; padding: 13px; margin-bottom: 1rem; font-size: 13px; letter-spacing: 0.06em; }
 
-  /* UPLOAD PROGRESS */
-  #upload-progress { display: none; margin-bottom: 1rem; }
-  #upload-progress.visible { display: block; }
-  .upload-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(--border); }
-  .upload-item:last-child { border-bottom: none; }
-  .upload-filename { flex: 1; font-size: 12px; color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
-  .upload-status { font-size: 11px; }
-  .upload-status.uploading { color: var(--muted); }
-  .upload-status.done { color: var(--gold-light); }
-  .upload-status.err { color: var(--danger); }
+/* UPLOAD PROGRESS */
+#upload-progress { display: none; margin-bottom: 1rem; }
+#upload-progress.visible { display: block; }
+.upload-item { display: flex; align-items: center; gap: 10px; padding: 7px 0; border-bottom: 1px solid var(–border); }
+.upload-item:last-child { border-bottom: none; }
+.upload-filename { flex: 1; font-size: 12px; color: var(–text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
+.upload-status { font-size: 11px; }
+.upload-status.uploading { color: var(–muted); }
+.upload-status.done { color: var(–gold-light); }
+.upload-status.err { color: var(–danger); }
 
-  /* SHARE */
-  #share-section { display: none; }
-  #share-section.visible { display: block; }
-  .share-link-box {
-    background: var(--surface2); border: 1px solid var(--gold);
-    border-radius: var(--radius-sm); padding: 10px 14px;
-    display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;
-  }
-  .share-link-url { font-size: 12px; color: var(--gold-light); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
-  .btn-copy {
-    background: transparent; border: 1px solid var(--bronze); color: var(--gold);
-    padding: 5px 12px; border-radius: var(--radius-sm); font-family: 'Cinzel', serif;
-    font-size: 10px; letter-spacing: 0.05em; cursor: pointer; white-space: nowrap; transition: all 0.15s;
-  }
-  .btn-copy:hover { background: var(--gold-dim); border-color: var(--gold); }
-  .btn-copy.copied { background: var(--gold-dim2); border-color: var(--gold-light); color: var(--gold-light); }
+/* SHARE */
+#share-section { display: none; }
+#share-section.visible { display: block; }
+.share-link-box {
+background: var(–surface2); border: 1px solid var(–gold);
+border-radius: var(–radius-sm); padding: 10px 14px;
+display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;
+}
+.share-link-url { font-size: 12px; color: var(–gold-light); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: monospace; }
+.btn-copy {
+background: transparent; border: 1px solid var(–bronze); color: var(–gold);
+padding: 5px 12px; border-radius: var(–radius-sm); font-family: ‘Cinzel’, serif;
+font-size: 10px; letter-spacing: 0.05em; cursor: pointer; white-space: nowrap; transition: all 0.15s;
+}
+.btn-copy:hover { background: var(–gold-dim); border-color: var(–gold); }
+.btn-copy.copied { background: var(–gold-dim2); border-color: var(–gold-light); color: var(–gold-light); }
 
-  /* DIVIDER */
-  .gold-divider { height: 1px; background: linear-gradient(90deg, transparent, var(--gold), transparent); margin: 0.75rem 0 1.25rem; opacity: 0.4; }
+/* DIVIDER */
+.gold-divider { height: 1px; background: linear-gradient(90deg, transparent, var(–gold), transparent); margin: 0.75rem 0 1.25rem; opacity: 0.4; }
 
-  /* STATUS */
-  #status { font-size: 12px; color: var(--muted); text-align: center; padding: 8px; min-height: 28px; font-family: 'Crimson Pro', serif; }
-  #status.error { color: var(--danger); }
-  #status.success { color: var(--gold-light); }
+/* STATUS */
+#status { font-size: 12px; color: var(–muted); text-align: center; padding: 8px; min-height: 28px; font-family: ‘Crimson Pro’, serif; }
+#status.error { color: var(–danger); }
+#status.success { color: var(–gold-light); }
 
-  /* GATE */
-  #signin-gate { text-align: center; padding: 4rem 1rem 3rem; }
-  #signin-gate .gate-logo { width: 90px; height: 90px; object-fit: contain; margin: 0 auto 1.25rem; display: block; }
-  #signin-gate h2 { font-family: 'Cinzel', serif; font-size: 30px; font-weight: 700; color: var(--gold-light); margin-bottom: 6px; letter-spacing: 0.04em; }
-  #signin-gate .tagline { font-family: 'Crimson Pro', serif; font-size: 16px; color: var(--muted); margin-bottom: 2.5rem; font-style: italic; }
-  #signin-gate-btn {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: var(--surface); border: 1px solid var(--border2);
-    color: var(--text); padding: 13px 28px; border-radius: 99px;
-    font-family: 'Crimson Pro', serif; font-size: 14px; cursor: pointer; transition: all 0.2s;
-  }
-  #signin-gate-btn:hover { border-color: var(--gold); background: var(--gold-dim); color: var(--gold-light); }
+/* GATE */
+#signin-gate { text-align: center; padding: 4rem 1rem 3rem; }
+#signin-gate .gate-logo { width: 90px; height: 90px; object-fit: contain; margin: 0 auto 1.25rem; display: block; }
+#signin-gate h2 { font-family: ‘Cinzel’, serif; font-size: 30px; font-weight: 700; color: var(–gold-light); margin-bottom: 6px; letter-spacing: 0.04em; }
+#signin-gate .tagline { font-family: ‘Crimson Pro’, serif; font-size: 16px; color: var(–muted); margin-bottom: 2.5rem; font-style: italic; }
+#signin-gate-btn {
+display: inline-flex; align-items: center; gap: 8px;
+background: var(–surface); border: 1px solid var(–border2);
+color: var(–text); padding: 13px 28px; border-radius: 99px;
+font-family: ‘Crimson Pro’, serif; font-size: 14px; cursor: pointer; transition: all 0.2s;
+}
+#signin-gate-btn:hover { border-color: var(–gold); background: var(–gold-dim); color: var(–gold-light); }
 
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .spinner { display: inline-block; width: 12px; height: 12px; border: 1.5px solid var(--border2); border-top-color: var(--gold); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; }
-  @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
-  .fadein { animation: fadeIn 0.3s ease forwards; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.spinner { display: inline-block; width: 12px; height: 12px; border: 1.5px solid var(–border2); border-top-color: var(–gold); border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
+.fadein { animation: fadeIn 0.3s ease forwards; }
 </style>
+
 </head>
 <body>
 <div id="app">
@@ -308,70 +310,73 @@
       </button>
     </div>
 
-    <div id="main-app" style="display:none">
-      <div class="steps">
-        <div class="step-dot active" id="step1"><div class="dot">1</div><div class="label">Drop</div></div>
-        <div class="step-dot" id="step2"><div class="dot">2</div><div class="label">Name</div></div>
-        <div class="step-dot" id="step3"><div class="dot">3</div><div class="label">Note</div></div>
-        <div class="step-dot" id="step4"><div class="dot">4</div><div class="label">Share</div></div>
+```
+<div id="main-app" style="display:none">
+  <div class="steps">
+    <div class="step-dot active" id="step1"><div class="dot">1</div><div class="label">Drop</div></div>
+    <div class="step-dot" id="step2"><div class="dot">2</div><div class="label">Name</div></div>
+    <div class="step-dot" id="step3"><div class="dot">3</div><div class="label">Note</div></div>
+    <div class="step-dot" id="step4"><div class="dot">4</div><div class="label">Share</div></div>
+  </div>
+
+  <div id="drop-zone">
+    <div class="drop-icon-wrap"><img id="drop-logo" src="" alt=""></div>
+    <div class="drop-title">Drop Your Photos Here</div>
+    <div class="drop-sub">or tap to browse — JPG, PNG, WEBP, HEIC, GIF</div>
+    <input type="file" id="file-input" multiple accept="image/*">
+  </div>
+
+  <div id="photo-grid"></div>
+
+  <div class="progress-bar-wrap" id="progress-wrap" style="display:none">
+    <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
+  </div>
+
+  <div class="card fadein" id="rename-box">
+    <div class="card-title" id="rename-counter">Rename photo 1 of 1</div>
+    <div class="rename-header">
+      <img id="rename-preview" src="" alt="preview">
+      <div class="rename-meta">
+        <div class="rename-from" id="rename-from-name">original.jpg</div>
+        <div class="rename-prompt">What should this photo be called?</div>
       </div>
-
-      <div id="drop-zone">
-        <div class="drop-icon-wrap"><img id="drop-logo" src="" alt=""></div>
-        <div class="drop-title">Drop Your Photos Here</div>
-        <div class="drop-sub">or tap to browse — JPG, PNG, WEBP, HEIC, GIF</div>
-        <input type="file" id="file-input" multiple accept="image/*">
-      </div>
-
-      <div id="photo-grid"></div>
-
-      <div class="progress-bar-wrap" id="progress-wrap" style="display:none">
-        <div class="progress-bar-fill" id="progress-fill" style="width:0%"></div>
-      </div>
-
-      <div class="card fadein" id="rename-box">
-        <div class="card-title" id="rename-counter">Rename photo 1 of 1</div>
-        <div class="rename-header">
-          <img id="rename-preview" src="" alt="preview">
-          <div class="rename-meta">
-            <div class="rename-from" id="rename-from-name">original.jpg</div>
-            <div class="rename-prompt">What should this photo be called?</div>
-          </div>
-        </div>
-        <div class="rename-input-row">
-          <input type="text" id="rename-input" placeholder="e.g. front-entrance.jpg" />
-          <div class="rename-btn-row">
-            <button class="btn-ghost" id="rename-skip-btn">Skip</button>
-            <button class="btn-gold" id="rename-next-btn">Next →</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card fadein" id="note-section">
-        <div class="card-title">Add a note (optional)</div>
-        <textarea id="note-textarea" placeholder="Write a caption, description, or instructions for the recipient…"></textarea>
-      </div>
-
-      <button class="btn-gold" id="upload-btn" style="display:none">Upload to Google Drive &amp; Get Link →</button>
-
-      <div class="card" id="upload-progress">
-        <div class="card-title">Uploading to Google Drive…</div>
-        <div id="upload-items"></div>
-      </div>
-
-      <div class="card fadein" id="share-section">
-        <div class="card-title">✦ Folder Ready — Share This Link</div>
-        <div class="share-link-box">
-          <div class="share-link-url" id="share-url">—</div>
-          <button class="btn-copy" id="copy-btn">Copy</button>
-        </div>
-        <div class="gold-divider"></div>
-        <div style="font-size:12px; color: var(--muted); margin-bottom: 1rem; font-style: italic;">Anyone with this link can view the folder. The link is unguessable but not password-protected.</div>
-        <button class="btn-ghost" id="new-folder-btn" style="width:100%; padding:11px;">+ Create Another Folder</button>
-      </div>
-
-      <div id="status"></div>
     </div>
+    <div class="rename-input-row">
+      <input type="text" id="rename-input" placeholder="e.g. front-entrance.jpg" />
+      <div class="rename-btn-row">
+        <button class="btn-ghost" id="rename-skip-btn">Skip</button>
+        <button class="btn-gold" id="rename-next-btn">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card fadein" id="note-section">
+    <div class="card-title">Add a note (optional)</div>
+    <textarea id="note-textarea" placeholder="Write a caption, description, or instructions for the recipient…"></textarea>
+  </div>
+
+  <button class="btn-gold" id="upload-btn" style="display:none">Upload to Google Drive &amp; Get Link →</button>
+
+  <div class="card" id="upload-progress">
+    <div class="card-title">Uploading to Google Drive…</div>
+    <div id="upload-items"></div>
+  </div>
+
+  <div class="card fadein" id="share-section">
+    <div class="card-title">✦ Folder Ready — Share This Link</div>
+    <div class="share-link-box">
+      <div class="share-link-url" id="share-url">—</div>
+      <button class="btn-copy" id="copy-btn">Copy</button>
+    </div>
+    <div class="gold-divider"></div>
+    <div style="font-size:12px; color: var(--muted); margin-bottom: 1rem; font-style: italic;">Anyone with this link can view the folder. The link is unguessable but not password-protected.</div>
+    <button class="btn-ghost" id="new-folder-btn" style="width:100%; padding:11px;">+ Create Another Folder</button>
+  </div>
+
+  <div id="status"></div>
+</div>
+```
+
   </main>
 </div>
 
@@ -395,13 +400,16 @@ const CLIENT_ID = STATE.clientId;
 const SCOPES = 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email';
 
 function doSignIn() {
+  // Clear any stale tokens so fresh consent is always granted with full scope
+  localStorage.removeItem('sa_refresh_token');
+  localStorage.removeItem('sa_user_name');
   const params = new URLSearchParams({
     client_id: CLIENT_ID,
     redirect_uri: REDIRECT_URI,
     response_type: 'code',
     scope: SCOPES,
     access_type: 'offline',
-    prompt: 'consent',
+    prompt: 'consent select_account',
   });
   window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
 }
@@ -630,5 +638,6 @@ function setStep(n) { [1,2,3,4].forEach(i => { const el=$('step'+i); el.classLis
 function stripExt(name) { return name.replace(/\.[^.]+$/,''); }
 function getExt(name) { const m=name.match(/\.([^.]+)$/); return m?m[1]:'jpg'; }
 </script>
+
 </body>
 </html>
