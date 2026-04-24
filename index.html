@@ -384,8 +384,15 @@ function onGsiLoaded() {
     callback: handleToken,
     prompt: '',
   });
-  // Try silent sign-in first
-  tryAutoSignIn();
+  // If we have cached user, show app immediately and refresh token silently
+  const restored = restoreUserFromCache();
+  if (!restored) {
+    // First time - try One Tap
+    tryAutoSignIn();
+  } else {
+    // Already known user - just refresh token quietly, no popup
+    tokenClient.requestAccessToken({ prompt: '' });
+  }
 }
 
 function tryAutoSignIn() {
@@ -431,10 +438,35 @@ async function fetchUserInfo() {
     const r = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', { headers: { Authorization: 'Bearer ' + STATE.accessToken } });
     const u = await r.json();
     const name = u.name || u.email || 'Signed in';
-    userName.textContent = name; userInitial.textContent = name[0].toUpperCase();
-    userPill.style.display = 'flex'; signInBtn.style.display = 'none';
-    signinGate.style.display = 'none'; mainApp.style.display = 'block'; setStatus('');
+    // Save user info so we can restore UI instantly next time
+    localStorage.setItem('sa_user_name', name);
+    localStorage.setItem('sa_user_initial', name[0].toUpperCase());
+    showSignedIn(name);
   } catch(e) { setStatus('Could not fetch user info.', 'error'); }
+}
+
+function showSignedIn(name) {
+  userName.textContent = name;
+  userInitial.textContent = name[0].toUpperCase();
+  userPill.style.display = 'flex';
+  signInBtn.style.display = 'none';
+  signinGate.style.display = 'none';
+  mainApp.style.display = 'block';
+  setStatus('');
+}
+
+function restoreUserFromCache() {
+  const name = localStorage.getItem('sa_user_name');
+  if (name) {
+    // Show the app UI immediately using cached name
+    showSignedIn(name);
+    // Silently get a fresh token in the background
+    if (tokenClient) {
+      tokenClient.requestAccessToken({ prompt: '' });
+    }
+    return true;
+  }
+  return false;
 }
 
 function doSignIn() {
