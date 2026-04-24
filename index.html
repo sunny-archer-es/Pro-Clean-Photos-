@@ -290,6 +290,7 @@ font-family: ‘Crimson Pro’, serif; font-size: 14px; cursor: pointer; transit
       <div id="user-pill" class="user-pill" style="display:none">
         <div class="user-avatar" id="user-initial">?</div>
         <span id="user-name">User</span>
+        <button id="sign-out-btn" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:11px;padding:0 0 0 6px;font-family:inherit;" title="Sign out">✕</button>
       </div>
     </div>
   </header>
@@ -511,6 +512,17 @@ restoreSession();
 signInBtn.addEventListener('click', doSignIn);
 signInGateBtn.addEventListener('click', doSignIn);
 
+document.getElementById('sign-out-btn').addEventListener('click', () => {
+  localStorage.removeItem('sa_refresh_token');
+  localStorage.removeItem('sa_user_name');
+  STATE.accessToken = null;
+  userPill.style.display = 'none';
+  signInBtn.style.display = 'flex';
+  signinGate.style.display = 'block';
+  mainApp.style.display = 'none';
+  setStatus('');
+});
+
 dropZone.addEventListener('click', () => fileInput.click());
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
@@ -593,8 +605,18 @@ async function startUpload() {
     shareUrl.textContent = STATE.folderLink; shareSection.classList.add('visible');
     uploadBtn.style.display = 'none'; setStatus('Folder ready — share the link below.', 'success');
   } catch(e) {
-    setStatus('Upload failed: ' + (e.message || 'unknown error'), 'error');
-    uploadBtn.disabled = false; uploadBtn.textContent = 'Upload to Google Drive & Get Link →';
+    const msg = e.message || '';
+    if (msg.includes('SCOPE_INSUFFICIENT') || msg.includes('insufficientPermissions') || msg.includes('403')) {
+      // Token lacks Drive scope — clear everything and force fresh sign-in
+      localStorage.removeItem('sa_refresh_token');
+      localStorage.removeItem('sa_user_name');
+      STATE.accessToken = null;
+      setStatus('Session expired. Signing you in again…', 'error');
+      setTimeout(doSignIn, 1500);
+    } else {
+      setStatus('Upload failed: ' + msg, 'error');
+      uploadBtn.disabled = false; uploadBtn.textContent = 'Upload to Google Drive & Get Link →';
+    }
   }
 }
 copyBtn.addEventListener('click', () => {
